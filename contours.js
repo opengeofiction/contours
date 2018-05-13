@@ -414,6 +414,7 @@ OGF.addAttributionText( ' | <a href="https://aws.amazon.com/public-datasets/terr
     + ' | <a href="https://www.axismaps.com/blog/2018/04/contours-in-browser/">Contour layer</a> by <a href="https://www.axismaps.com">Axis Maps</a>' );
 var map = L.map( 'map' ).setView([50,8], 13);
 var ogfMap = OGF.map( map, {layers: '+OpenTopoMap,OpenStreetMap,None'} );
+var infoBox = L.control.infoBox( {position: 'bottomright', text: 'Elevation'} ).addTo( map );
 
 for( var ogfLayer in ogfMap._layers ){
 //  console.log( '' + (++ct) + ': ' + layer.options.ogf_shortcut );
@@ -505,6 +506,25 @@ map.on( 'keypress', function(evt){
 
         redrawContours();
     }
+} );
+
+map.on( 'mousemove', function(evt){
+    if( ! demData )  return;
+    var evtOrig = evt.originalEvent;
+
+    var ptP = L.DomUtil.getPosition( contourCanvas );
+//  console.log( "ptP = " + JSON.stringify(ptP,null,"  ") );  // _DEBUG_
+    var ptE = map.containerPointToLayerPoint( {x: evtOrig.clientX, y: evtOrig.clientY} );
+//  console.log( "ptE = " + JSON.stringify(ptE,null,"  ") );  // _DEBUG_
+
+//  var cnvRect = demCanvas.getBoundingClientRect();
+//  var x = evtOrig.clientX + buffer, y = evtOrig.clientY + buffer;
+    var x = ptE.x - ptP.x, y = ptE.y - ptP.y;
+    var i = getIndexForCoordinates( width, x, y );
+    var el = Math.round(elev(i, demData) * (unit == 'ft' ? 3.28084 : 1));
+
+//  console.log( "x: " + x + "  y: " + y + "  elev = " + el );  // _DEBUG_
+    infoBox.setContent( '' + el );
 } );
 
 
