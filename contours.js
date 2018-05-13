@@ -38,7 +38,7 @@ var wait;
 // variables for styles etc. below
 
 var type = 'lines';
-var unit = 'ft';
+var unit = 'm';
 
 var lineWidth = .75;
 var lineWidthMajor = 1.5;
@@ -70,8 +70,8 @@ window.onresize = function () {
   demCanvas.width = width;
   demCanvas.height = height;
   contour.size([width, height]);
-  clearTimeout(wait);
-  wait = setTimeout(getRelief,500);
+//clearTimeout(wait);
+//wait = setTimeout(getRelief,500);
 }
 
 /* UI event handlers */
@@ -300,10 +300,10 @@ d3.selectAll('.color-input').on('change', function () {
   wait = setTimeout(function () { load(drawContours) },500);
 })
 
-d3.select('input[type="checkbox"]').on('change', function () {
-  if (this.checked) referenceLayer.setOpacity(1);
-  else referenceLayer.setOpacity(0);
-});
+//d3.select('input[type="checkbox"]').on('change', function () {
+//if (this.checked) referenceLayer.setOpacity(1);
+//else referenceLayer.setOpacity(0);
+//});
 
 d3.select('#download-geojson').on('click', downloadGeoJson);
 d3.select('#download-png').on('click', downloadPNG);
@@ -408,22 +408,68 @@ The good stuff starts from here
 
 L.mapbox.accessToken = 'pk.eyJ1IjoiYXdvb2RydWZmIiwiYSI6IktndnRPLU0ifQ.OMo9_1sJGjpSUNiJPBGA9A';
 
-var map = L.mapbox.map('map',null,{scrollWheelZoom: false});
+//var map = L.mapbox.map('map',null,{scrollWheelZoom: false});
+var OGF = OGFUtil();
+var map = L.map( 'map' ).setView([50,8], 13);
+var ogfMap = OGF.map( map, {layers: '+OpenTopoMap,OpenStreetMap'} );
+
+for( var ogfLayer in ogfMap._layers ){
+//  console.log( '' + (++ct) + ': ' + layer.options.ogf_shortcut );
+    ogfMap._layers[ogfLayer].options.opacity = 0.3;
+}
+
+function moveToLocation( lon, lat ){
+    map.panTo( [lat,lon] );
+    redrawContours();
+}
+
+function getCurrentLocation(){
+    return map.getCenter();
+}
+
+function getUrlQuery(){
+    return OGF.getUrlLocation( map );
+}
+
+
 var hash = new L.Hash(map);
 map.setView(map_start_location.slice(0, 3), map_start_location[2]);
 
-map.on('moveend', function() {
-  // on move end we redraw the contour layer, so clear some stuff
+//map.on('moveend', function() {
+//// on move end we redraw the contour layer, so clear some stuff
+//
+//contourContext.clearRect(0,0,width,height);
+//clearTimeout(wait);
+//wait = setTimeout(getRelief,500);  // redraw after a delay in case map is moved again soon after
+//});
 
+map.on( 'zoomstart', function(){
+    clearContours();
+} );
+
+function clearContours(){
   contourContext.clearRect(0,0,width,height);
+}
+
+function redrawContours(){
+  clearContours();
   clearTimeout(wait);
   wait = setTimeout(getRelief,500);  // redraw after a delay in case map is moved again soon after
-});
+}
 
 map.on('move', function() {
   // stop things so it doesn't redraw in the middle of panning
   clearTimeout(wait);
 });
+
+map.on( 'keypress', function(evt){
+    var key = evt.originalEvent.key;
+    if( key === 'r' ){
+        console.log( '--- redrawContours ---' );
+        redrawContours();
+    }
+} );
+
 
 // custom tile layer for the Mapzen elevation tiles
 // it returns div tiles but doesn't display anyting; images are saved but only drawn to an invisible canvas (demCanvas)
@@ -434,12 +480,13 @@ var CanvasLayer = L.GridLayer.extend({
       var self = this;
       img.crossOrigin = '';
       tile.img = img;
-      img.onload = function() {
-        // we wait for tile images to load before we can redraw the map
-        clearTimeout(wait);
-        wait = setTimeout(getRelief,500); // only draw after a reasonable delay, so that we don't redraw on every single tile load
-      }
+//    img.onload = function() {
+//      // we wait for tile images to load before we can redraw the map
+//      clearTimeout(wait);
+//      wait = setTimeout(getRelief,500); // only draw after a reasonable delay, so that we don't redraw on every single tile load
+//    }
       img.src = 'https://elevation-tiles-prod.s3.amazonaws.com/terrarium/'+coords.z+'/'+coords.x+'/'+coords.y+'.png'
+//    img.src = 'https://tile.opengeofiction.net/planet/WW_elev/'+coords.z+'/'+coords.x+'/'+coords.y+'.png'
       return tile;
   }
 });
@@ -451,11 +498,11 @@ pane.appendChild(contourCanvas);
 
 // custom map pane for the labels
 var labelPane = map.createPane('labels');
-var referenceLayer = L.mapbox.styleLayer('mapbox://styles/awoodruff/cjggk1nwn000f2rjsi5x4iha1', {
-  minZoom: 0,
-  maxZoom: 15,
-  pane: 'labels',
-}).addTo(map);
+//var referenceLayer = L.mapbox.styleLayer('mapbox://styles/awoodruff/cjggk1nwn000f2rjsi5x4iha1', {
+//minZoom: 0,
+//maxZoom: 15,
+//pane: 'labels',
+//}).addTo(map);
 reverseTransform();
 
 // this resets our canvas back to top left of the window after panning the map

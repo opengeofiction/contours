@@ -1,6 +1,7 @@
 <html>
 <head>
   <!-- Global site tag (gtag.js) - Google Analytics -->
+  <title>Contour Viewer</title>
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-54392712-6"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -26,6 +27,7 @@
   <script src="https://d3js.org/d3-request.v1.min.js"></script>
   <script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
   <script src="jscolor.js"></script>
+
   <style>
     html, body { 
       margin: 0;
@@ -301,7 +303,7 @@
       font-size: 72px;
       color: rgb(88,87,72);
       text-align: center;
-      display: flex;
+      display: none;
       top: 0;
       left: 0;
       justify-content: center;
@@ -318,9 +320,9 @@
 </head>
 
 <body>
-  <a id="axis-link" href="www.axismaps.com" target="_blank"><img src="https://www.axismaps.com/images/logo_small.png"></a>
+  <!-- <a id="axis-link" href="www.axismaps.com" target="_blank"><img src="https://www.axismaps.com/images/logo_small.png"></a> -->
   <div id='wrapper'>
-    <header>CONTOURS</header>
+    <!-- <header>CONTOURS</header> -->
     <div id='map'></div>
     <div id="panels">
       
@@ -368,10 +370,10 @@
             <div class="settings-content">
             <div class="settings-section">
               <div class="row-icon"><img src="img/icon_contours.png"/></div>
-              <input type="text" value="500" id="interval-input"/>
+              <input type="text" value="100" id="interval-input"/>
               <span></span>
-              <label><input type="radio" name="unit" value="m"/><span>meters</span></label>
-              <label><input type="radio" name="unit" checked value="ft"/><span>feet</span></label>
+              <label><input type="radio" name="unit" checked value="m"/><span>meters</span></label>
+              <label><input type="radio" name="unit" value="ft"/><span>feet</span></label>
             </div>
             <div class="settings-section">
               <div class="row-icon"><img src="img/icon_major.png"/></div>
@@ -444,12 +446,15 @@
     </div>
     <div class="toggle" id="settings-toggle" title="Edit style"><i class="icon-brush"></i></div>
     <div class="toggle" id="download-toggle" title="Download map or data"><i class="icon-download"></i></div>
+    <!--
     <div id="search">
       <input type="text" placeholder="Search for places..." />
       <div id="search-results"></div>
     </div>
+    -->
   </div>
   <div id="loading">Drawing contours...</div>
+  <script src="/util/OGFUtil.js"></script>
   <script src='contours.js'></script>
 </body>
 </html>
