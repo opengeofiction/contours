@@ -413,7 +413,7 @@ var OGF = OGFUtil();
 OGF.addAttributionText( ' | <a href="https://aws.amazon.com/public-datasets/terrain/">Elevation tiles</a> by Mapzen'
     + ' | <a href="https://www.axismaps.com/blog/2018/04/contours-in-browser/">Contour layer</a> by <a href="https://www.axismaps.com">Axis Maps</a>' );
 var map = L.map( 'map' ).setView([50,8], 13);
-var ogfMap = OGF.map( map, {layers: '+OpenTopoMap,OpenStreetMap'} );
+var ogfMap = OGF.map( map, {layers: '+OpenTopoMap,OpenStreetMap,None'} );
 
 for( var ogfLayer in ogfMap._layers ){
 //  console.log( '' + (++ct) + ': ' + layer.options.ogf_shortcut );
