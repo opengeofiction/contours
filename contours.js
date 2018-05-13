@@ -463,9 +463,44 @@ map.on('move', function() {
 });
 
 map.on( 'keypress', function(evt){
-    var key = evt.originalEvent.key;
-    if( key === 'r' ){
+    var evtOrig = evt.originalEvent;
+    var key  = evtOrig.key;
+    var code = evtOrig.code;
+    console.log( "key <" + key + ">  code <" + code + ">" );  // _DEBUG_
+    if( code === 'KeyR' ){
         console.log( '--- redrawContours ---' );
+        redrawContours();
+    }else if( code === 'KeyT' ){
+        if (d3.select('#no-bg').node().checked) {
+          d3.select('#hypso-bg').node().checked = true;
+          colorType = 'hypso';
+        }else{
+          d3.select('#no-bg').node().checked = true;
+          colorType = 'none';
+        }
+        load(drawContours);
+    }else if( code.match(/^(Digit\d|Minus)$/) ){
+        var intvNew, majorNew;
+        if( code === 'Minus' ){
+            intvNew  = 2.5;
+            majorNew = 4;
+        }else{
+            intvNew  = parseInt( code.substr(5) );
+            majorNew = (evtOrig.altKey)? 5 : 10;
+        }
+        if( intvNew === 0 )  intvNew = 10;
+        if( evtOrig.shiftKey ){
+            intvNew *= 10;
+        }else{
+            intvNew *= 100;
+        }
+        
+        interval = intvNew;
+        majorInterval = intvNew * majorNew;
+        console.log( "interval <" + interval + ">  majorInterval <" + majorInterval + ">" );  // _DEBUG_
+        d3.select('#interval-input').node().value = interval;
+        d3.select('#major').node().value = majorNew;
+
         redrawContours();
     }
 } );
@@ -512,6 +547,7 @@ function reverseTransform() {
 };
 
 // this is to ensure the "loading" message gets a chance to show. show it then do the function (usually getRelief or drawContours) on next frame
+
 function load (fn) {
   requestAnimationFrame(function () {
     d3.select('#loading').style('display', 'flex');
