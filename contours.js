@@ -380,6 +380,7 @@ function search (val) {
 }
 
 var exampleLocations = [
+  {name: 'Khaiwoon', coords: [18.5320, 89.3992, 11]},
   {name: 'AN126a', coords: [-23.8699, 20.4257, 9]}
 //  {name: 'Sedgedows Island', coords: [13.7714, 83.8582, 16]}
 //  {name: 'Mount Fuji', coords: [35.3577, 138.7331, 13]},
@@ -544,8 +545,9 @@ var CanvasLayer = L.GridLayer.extend({
 //      clearTimeout(wait);
 //      wait = setTimeout(getRelief,500); // only draw after a reasonable delay, so that we don't redraw on every single tile load
 //    }
-  //    img.src = 'https://elevation-tiles-prod.s3.amazonaws.com/terrarium/'+coords.z+'/'+coords.x+'/'+coords.y+'.png'
-      img.src = 'https://tile.opengeofiction.net//planet/WW_elev/'+coords.z+'/'+coords.x+'/'+coords.y+'.png'
+      img.src = 'https://elevation-tiles-prod.s3.amazonaws.com/terrarium/'+coords.z+'/'+coords.x+'/'+coords.y+'.png'
+      // img.src = 'https://tile.opengeofiction.net//planet/WW_elev/'+coords.z+'/'+coords.x+'/'+coords.y+'.png'
+      // img.src = 'https://tile.opengeofiction.net/topomap/'+coords.z+'/'+coords.x+'/'+coords.y+'.png'
       return tile;
   }
 });
@@ -655,6 +657,7 @@ function getContours () {
 // draw the map!
 function drawContours(svg) {
   // svg option is for export
+  try {
   if (svg !== true) { // this is the normal canvas drawing
     contourContext.clearRect(0,0,width,height);
     contourContext.save();
@@ -768,6 +771,9 @@ function drawContours(svg) {
       .attr('id', function (d) {
         return 'elev-' + d.value;
       });
+  }
+  } catch (e) {
+	  console.error(e);
   }
   d3.select('#loading').style('display', 'none');
 }
