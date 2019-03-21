@@ -2,7 +2,7 @@ function OGFUtil(){
 
 var ogf = {
     config: {
-        API_URL:        '//opengeofiction.net/',
+        API_URL:        'https://opengeofiction.net/',
         TILES_URL:      'https://tile.opengeofiction.net',
         TILESERVER_URL: 'https://tile.opengeofiction.net',
         WIKI_URL:       '//wiki.opengeofiction.net/',

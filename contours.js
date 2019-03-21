@@ -415,7 +415,7 @@ var OGF = OGFUtil();
 OGF.addAttributionText( ' | <a href="https://aws.amazon.com/public-datasets/terrain/">Elevation tiles</a> by Mapzen'
     + ' | <a href="https://www.axismaps.com/blog/2018/04/contours-in-browser/">Contour layer</a> by <a href="https://www.axismaps.com">Axis Maps</a>' );
 var map = L.map( 'map' ).setView([13.7714,83.8582], 16); // Sedgedows Island
-var ogfMap = OGF.map( map, {layers: 'Standard,+TopoMap,Histor'} );
+var ogfMap = OGF.map( map, {layers: 'OpenTopoMap,OpenStreetMap,Standard,+TopoMap,Histor'} );
 var infoBox = L.control.infoBox( {position: 'bottomright', text: 'Elevation'} ).addTo( map );
 
 for( var ogfLayer in ogfMap._layers ){
