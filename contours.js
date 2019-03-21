@@ -380,12 +380,14 @@ function search (val) {
 }
 
 var exampleLocations = [
-  {name: 'Mount Fuji', coords: [35.3577, 138.7331, 13]},
-  {name: 'Big Island, Hawaii', coords: [19.6801, -155.5132, 9]},
-  {name: 'Grand Canyon', coords: [36.0469, -113.8416, 13]},
-  {name: 'Mount Everest', coords: [27.9885, 86.9233, 12]},
-  {name: 'Mount Rainier', coords:[46.8358, -121.7663, 11]},
-  {name: 'White Mountains', coords:[44.0859, -71.4441, 11]}
+  {name: 'AN126a', coords: [-23.8699, 20.4257, 9]}
+//  {name: 'Sedgedows Island', coords: [13.7714, 83.8582, 16]}
+//  {name: 'Mount Fuji', coords: [35.3577, 138.7331, 13]},
+//  {name: 'Big Island, Hawaii', coords: [19.6801, -155.5132, 9]},
+//  {name: 'Grand Canyon', coords: [36.0469, -113.8416, 13]},
+//  {name: 'Mount Everest', coords: [27.9885, 86.9233, 12]},
+//  {name: 'Mount Rainier', coords:[46.8358, -121.7663, 11]},
+//  {name: 'White Mountains', coords:[44.0859, -71.4441, 11]}
 ];
 
 var map_start_location = exampleLocations[Math.floor(Math.random()*exampleLocations.length)].coords;
@@ -412,8 +414,8 @@ L.mapbox.accessToken = 'pk.eyJ1IjoiYXdvb2RydWZmIiwiYSI6IktndnRPLU0ifQ.OMo9_1sJGj
 var OGF = OGFUtil();
 OGF.addAttributionText( ' | <a href="https://aws.amazon.com/public-datasets/terrain/">Elevation tiles</a> by Mapzen'
     + ' | <a href="https://www.axismaps.com/blog/2018/04/contours-in-browser/">Contour layer</a> by <a href="https://www.axismaps.com">Axis Maps</a>' );
-var map = L.map( 'map' ).setView([50,8], 13);
-var ogfMap = OGF.map( map, {layers: '+OpenTopoMap,OpenStreetMap,None'} );
+var map = L.map( 'map' ).setView([13.7714,83.8582], 16); // Sedgedows Island
+var ogfMap = OGF.map( map, {layers: 'Standard,+TopoMap,Histor'} );
 var infoBox = L.control.infoBox( {position: 'bottomright', text: 'Elevation'} ).addTo( map );
 
 for( var ogfLayer in ogfMap._layers ){
@@ -542,8 +544,8 @@ var CanvasLayer = L.GridLayer.extend({
 //      clearTimeout(wait);
 //      wait = setTimeout(getRelief,500); // only draw after a reasonable delay, so that we don't redraw on every single tile load
 //    }
-      img.src = 'https://elevation-tiles-prod.s3.amazonaws.com/terrarium/'+coords.z+'/'+coords.x+'/'+coords.y+'.png'
-//    img.src = 'https://tile.opengeofiction.net/planet/WW_elev/'+coords.z+'/'+coords.x+'/'+coords.y+'.png'
+  //    img.src = 'https://elevation-tiles-prod.s3.amazonaws.com/terrarium/'+coords.z+'/'+coords.x+'/'+coords.y+'.png'
+      img.src = 'https://tile.opengeofiction.net//planet/WW_elev/'+coords.z+'/'+coords.x+'/'+coords.y+'.png'
       return tile;
   }
 });
@@ -645,7 +647,9 @@ function getContours () {
     }
   }
 
-  drawContours();
+  if (typeof contoursGeoData !== 'undefined') {
+  	drawContours();
+  }
 }
 
 // draw the map!
@@ -855,7 +859,7 @@ function download(data, filename, mime) {
 
 // convert elevation tile color to elevation value
 function elev(index, demData) {
-  if (index < 0 || demData[index] === undefined) return undefined;
+  if (demData === undefined || index < 0 || demData[index] === undefined) return undefined;
   return (demData[index] * 256 + demData[index+1] + demData[index+2] / 256) - 32768;
 }
 
