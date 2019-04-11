@@ -538,7 +538,7 @@ var CanvasLayer = L.GridLayer.extend({
       var tile = L.DomUtil.create('div', 'leaflet-tile');
       var img = new Image();
       var self = this;
-      img.crossOrigin = '';
+      img.crossOrigin = '*';
       tile.img = img;
 //    img.onload = function() {
 //      // we wait for tile images to load before we can redraw the map
@@ -546,6 +546,7 @@ var CanvasLayer = L.GridLayer.extend({
 //      wait = setTimeout(getRelief,500); // only draw after a reasonable delay, so that we don't redraw on every single tile load
 //    }
       img.src = 'https://elevation-tiles-prod.s3.amazonaws.com/terrarium/'+coords.z+'/'+coords.x+'/'+coords.y+'.png'
+      img.src = 'http://ogf.src2.ilyaguy.me/proxy.php?/planet/OG_elev/'+coords.z+'/'+coords.x+'/'+coords.y+'.ddm';
       // img.src = 'https://tile.opengeofiction.net//planet/WW_elev/'+coords.z+'/'+coords.x+'/'+coords.y+'.png'
       // img.src = 'https://tile.opengeofiction.net/topomap/'+coords.z+'/'+coords.x+'/'+coords.y+'.png'
       return tile;
