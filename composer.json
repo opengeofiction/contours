@@ -1,0 +1,13 @@
+{
+    "name": "ilyaguy/contours",
+    "type": "project",
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "authors": [
+        {
+            "name": "Illia Hai",
+            "email": "ilya@ilyaguy.me"
+        }
+    ]
+}
